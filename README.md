@@ -1,4 +1,7 @@
+
+
 # CDH
+
 cdh搭建文档 
 ## 目的
 此文档是为了方便快速搭建一套测试使用的cdh环境，通过这个文档，傻瓜应该都能上手
@@ -65,9 +68,9 @@ cdh搭建文档
 这一步其实可以省略，看你需要，我这里会将机器的静态ip设置为192.168.88.220
 
 #### 配置主机名
-这里配置为[single.cdh.com]
+这里配置为[single-cdh]
 ```sh
-hostnamectl set-hostname single.cdh.com
+hostnamectl set-hostname single-cdh
 ```
 
 
@@ -80,7 +83,7 @@ vi /etc/hosts
 
 加入你的机器名和ip的映射关系
 
-192.168.88.220 single.cdh.com
+192.168.88.220 single-cdh
 
 ####  关闭防火墙
 
@@ -194,6 +197,16 @@ mkdir -p /var/www/html/cm7/7.1.4/
 
 将备用的rpm包上传到/var/www/html/cm7/7.1.4/
 
+```sh
+mv cloudera-manager-* /var/www/html/cm7/7.1.4/
+mv allkeys.asc /var/www/html/cm7/7.1.4/
+mv openjdk8-8.0+232_9-cloudera.x86_64.rpm /var/www/html/cm7/7.1.4/
+mv enterprise-debuginfo-7.1.4-6363010.el7.x86_64.rpm /var/www/html/cm7/7.1.4/
+mv RPM-GPG-KEY-cloudera  /var/www/html/cm7/7.1.4/
+```
+
+
+
 上传结束后,运行命令,注意后面的点
 
 ```sh
@@ -207,11 +220,11 @@ cd /etc/yum.repos.d
 vim cm7.repo
 ```
 
-填写内容如下,注意地址跟你本机匹配,这里是single.cdh.com
+填写内容如下,注意地址跟你本机匹配,这里是single-cdh
 ```shell
 [cm7]
 name=cm7
-baseurl=http://single.cdh.com/cm7/7.1.4
+baseurl=http://single-cdh/cm7/7.1.4
 gpgcheck=0
 enabled=1
 ```
@@ -222,6 +235,13 @@ enabled=1
 
 ```sh
 mkdir -p /var/www/html/cdh7/7.1.4
+```
+
+
+
+```sh
+mv CDH* /var/www/html/cdh7/7.1.4
+mv manifest.json /var/www/html/cdh7/7.1.4
 ```
 
 将备用的parcel包上传到/var/www/html/cdh7/7.1.4
@@ -256,6 +276,30 @@ rpm -ivh openjdk8-8.0+232_9-cloudera.x86_64.rpm
 /usr/share/java
 ```
 
+```sh
+mv mysql-connector-java.jar /usr/share/java
+```
+
+
+
+
+
+
+
+------
+
+
+
+
+
+### 安装Cloudera Manager Server
+
+#### yum安装
+
+```shell
+yum -y install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server
+```
+
 #### 导入TLS
 
 直接运行即可
@@ -265,11 +309,8 @@ JAVA_HOME=/usr/java/jdk1.8.0_232-cloudera /opt/cloudera/cm-agent/bin/certmanager
 ```
 
 
-------
 
-
-
-### 初始化数据库
+#### 初始化数据库
 
 直接执行下面语句,后面两个参数是数据库账号和密码
 
@@ -278,12 +319,6 @@ JAVA_HOME=/usr/java/jdk1.8.0_232-cloudera /opt/cloudera/cm-agent/bin/certmanager
 ```
 
 
-
-### 安装Cloudera Manager Server
-
-```shell
-yum -y install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server
-```
 
 
 
@@ -319,7 +354,7 @@ systemctl stop cloudera-scm-server.service
 vi /etc/cloudera-scm-agent/config.ini
 ```
 
-修改server_host=single.cdh.com
+修改server_host=single-cdh
 
 启动
 
@@ -338,4 +373,94 @@ systemctl status cloudera-scm-agent
 ```sh
 tail -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 ```
+
+
+
+
+
+### 管理平台新建集群
+
+打开浏览器 http://192.168.88.220:7180/
+
+![](images\微信截图_20210517212427.png)
+
+选择60天试用
+
+![](images\微信截图_20210517212609.png)
+
+扫描并选中主机名
+
+![](images\微信截图_20210517212748.png)
+
+
+
+
+
+选择配置parcel源
+
+![](images\微信截图_20210520203910.png)
+
+
+
+将url全部删掉，留下我们自己配置的仓库url，输入后点击“save & Verify Configuration”
+
+![](images\微信截图_20210517213219.png)
+
+这里一定要选择7.1.4的版本，如果没有这个版本选择，那估计是前面的步骤哪里没做好了，只能重做
+
+![](images\微信截图_20210520202749.png)
+
+
+
+
+
+这里输入机器的账号密码，这里都是root
+
+
+
+![](images\微信截图_20210517214245.png)
+
+
+
+如无意外，会来到这个页面，这个页面下载不会很慢，因为我们自己配置了下载仓库，耐心等待
+
+![](images\微信截图_20210520203114.png)
+
+
+
+![](images\微信截图_20210520205320.png)
+
+选择自定义服务
+
+![](images\微信截图_20210520205337.png)
+
+
+
+这里我先选择安装hdfs、hive、zookeeper和yarn，其他的我们再看
+
+![](D:\project\cdh\images\微信截图_20210520205358.png)
+
+
+
+
+
+![](images\微信截图_20210520205501.png)
+
+
+
+这里有一点要注意，hive这里的WebHcat和HiveServer2要选择好机器
+
+![](images\微信截图_20210521132919.png)
+
+
+
+
+
+
+
+数据库选择hive和rman，点击测试连接，没问题后点击继续
+
+![](images\微信截图_20210520205703.png)
+
+
 
