@@ -65,7 +65,7 @@ cdh搭建文档
 
 
 #### 设置静态IP
-这一步其实可以省略，看你需要，我这里会将机器的静态ip设置为192.168.88.220
+这一步其实可以省略，看你需要，我这里会将机器的静态ip设置为192.168.68.220
 
 #### 配置主机名
 这里配置为[single-cdh]
@@ -83,7 +83,7 @@ vi /etc/hosts
 
 加入你的机器名和ip的映射关系
 
-192.168.88.220 single-cdh
+192.168.68.220 single-cdh
 
 ####  关闭防火墙
 
@@ -380,7 +380,7 @@ tail -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 ### 管理平台新建集群
 
-打开浏览器 http://192.168.88.220:7180/
+打开浏览器 http://192.168.68.220:7180/
 
 ![](.\images\微信截图_20210517212427.png)
 
@@ -398,19 +398,17 @@ tail -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 选择配置parcel源
 
-![](images\微信截图_20210520203910.png)
+![](./images/微信截图_20210520203910.png)
 
 
 
 将url全部删掉，留下我们自己配置的仓库url，输入后点击“save & Verify Configuration”
 
-![](images\微信截图_20210517213219.png)
+![](./images/微信截图_20210517213219.png)
 
 这里一定要选择7.1.4的版本，如果没有这个版本选择，那估计是前面的步骤哪里没做好了，只能重做
 
-![](images\微信截图_20210520202749.png)
-
-
+![](./images/微信截图_20210520202749.png)
 
 
 
@@ -418,49 +416,74 @@ tail -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 
 
-![](images\微信截图_20210517214245.png)
+![](./images/微信截图_20210517214245.png)
 
 
 
 如无意外，会来到这个页面，这个页面下载不会很慢，因为我们自己配置了下载仓库，耐心等待
 
-![](images\微信截图_20210520203114.png)
+![](./images/微信截图_20210520203114.png)
 
 
 
-![](images\微信截图_20210520205320.png)
+![](./images/微信截图_20210520205320.png)
 
 选择自定义服务
 
-![](images\微信截图_20210520205337.png)
+![](./images/微信截图_20210520205337.png)
 
 
 
-这里我先选择安装hdfs、hive、zookeeper和yarn，其他的我们再看
+>这里为了提高安装服务的成功率，建议一个一个安装，首先安装hdfs
 
-![](D:\project\cdh\images\微信截图_20210520205358.png)
+需要配置Reports Manager的时候，如下配置
 
-
-
-
-
-![](images\微信截图_20210520205501.png)
+<img src="./images/微信截图_20210521214825.png" style="zoom:75%;" />
 
 
 
-这里有一点要注意，hive这里的WebHcat和HiveServer2要选择好机器
+再安装zookper
 
-![](images\微信截图_20210521132919.png)
+![](./images/微信截图_20210521220937.png)
+
+再安装yarn
+
+![](./images/微信截图_20210522134213.png)
+
+
+
+最后再安装hive
+
+数据库配置如下
+
+![](./images/微信截图_20210521220141.png)
+
+
+
+> 要为WebHcat和HiveServer2设置节点，默认是无的
+
+![](./images/微信截图_20210521221224.png)
+
+最终一个简单的cdh服务就搭建好了
+
+![](./images/微信截图_20210521222023.png)
+
+### 使用利用beeline连接hive
+
+一定要先将ssl关闭，如下，关闭后重启一下Hive配置
+
+![](D:\project\cdh\images\微信截图_20210522141222.png)
+
+连接命令：
+```sh
+!connect jdbc:hive2://single-cdh:10000/;
+```
+效果如图：
+![](./images/微信截图_20210522143729.png)
 
 
 
 
-
-
-
-数据库选择hive和rman，点击测试连接，没问题后点击继续
-
-![](images\微信截图_20210520205703.png)
 
 
 
