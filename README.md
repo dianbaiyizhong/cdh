@@ -382,15 +382,15 @@ tail -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 打开浏览器 http://192.168.88.220:7180/
 
-![](images\微信截图_20210517212427.png)
+![](.\images\微信截图_20210517212427.png)
 
 选择60天试用
 
-![](images\微信截图_20210517212609.png)
+![](.\images\微信截图_20210517212609.png)
 
 扫描并选中主机名
 
-![](images\微信截图_20210517212748.png)
+![](.\images\微信截图_20210517212748.png)
 
 
 
