@@ -390,7 +390,7 @@ tail -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 扫描并选中主机名
 
-![](.\images\微信截图_20210517212748.png)
+![](./images/微信截图_20210517212748.png)
 
 
 
