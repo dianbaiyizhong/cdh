@@ -478,8 +478,12 @@ tail -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 ```sh
 !connect jdbc:hive2://single-cdh:10000/;
 ```
+账号和密码都是hive
+
 效果如图：
 ![](./images/微信截图_20210522143729.png)
+
+
 
 
 
