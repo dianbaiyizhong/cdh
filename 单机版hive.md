@@ -12,7 +12,6 @@
 
 
 
-
 https://blog.csdn.net/winterking3/article/details/87617607
 https://blog.csdn.net/winterking3/article/list/3
 https://blog.csdn.net/leanaoo/article/details/83351240
@@ -284,7 +283,11 @@ hive-env.sh
 HADOOP_HOME=/usr/local/bigdata/hadoop-3.3.1/
 ```
 
+```
+export HADOOP_CLASSPATH=${TEZ_HOME}/conf:${TEZ_HOME}/*:${TEZ_HOME}/lib/*:${HADOOP_CLASSPATH}
+```
 
+ 
 
 hive-site.xml
 
@@ -336,6 +339,7 @@ schematool -dbType mysql -initSchema
 
 ```sh
 hadoop fs -mkdir -p /apps/tez-0.9.2
+（在share目录下）
 hadoop fs -copyFromLocal tez.tar.gz /apps/tez-0.9.2
 ```
 
@@ -350,7 +354,7 @@ tez-site.xml
 ```
 
 ```sh
-hiveserver2 -hiveconf hive.execution.engine=mr
+hiveserver2 -hiveconf hive.execution.engine=mr -hiveconf hive.root.logger=DEBUG,console
 ```
 
 
@@ -360,3 +364,15 @@ beeline
 !connect jdbc:hive2://localhost:10000/;
 ```
 账号是root，密码是空
+
+
+
+
+
+set hive.execution.engine=mr;
+
+
+
+使用这个debug，可以看到beeline不能打出来的日志
+
+hiveserver2 -hiveconf hive.root.logger=DEBUG,console
